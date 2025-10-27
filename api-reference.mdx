@@ -1,0 +1,28 @@
+---
+title: "Paperguide API Reference"
+---
+
+Access Paperguide's powerful API to integrate with your applications.
+
+<CodeGroup tabs="JavaScript,Python">
+```javascript
+const response = await fetch('/api/v1/resources');
+```
+
+```python
+import requests
+response = requests.get('/api/v1/resources')
+```
+</CodeGroup>
+
+<Response tabs="200,400" show-lines="false">
+```json
+{"status": "success"}
+```
+
+```json
+{"error": "Invalid request"}
+```
+</Response>
+
+For more details, check our [API documentation](https://paperguide.com/api-docs).

@@ -1,0 +1,60 @@
+{
+  "name": "Paperguide Documentation",
+  "initialRoute": "introduction",
+  "colors": {
+    "light": {
+      "brand": "#e45d20"
+    },
+    "dark": {
+      "brand": "#ff784e"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "icon": "book",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "icon": "rocket",
+            "pages": [
+              {
+                "title": "Introduction",
+                "path": "introduction",
+                "icon": "star"
+              },
+              {
+                "title": "Getting Started",
+                "path": "getting-started",
+                "icon": "user-plus"
+              }
+            ]
+          },
+          {
+            "group": "Features",
+            "icon": "star",
+            "pages": [
+              {
+                "title": "Features",
+                "path": "features",
+                "icon": "zap"
+              }
+            ]
+          },
+          {
+            "group": "API Reference",
+            "icon": "code",
+            "pages": [
+              {
+                "title": "API Reference",
+                "path": "api-reference",
+                "icon": "code"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
