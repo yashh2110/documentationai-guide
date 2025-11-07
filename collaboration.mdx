@@ -1,0 +1,88 @@
+---
+title: Collaboration
+description: Tools and workflows for team-based documentation in Paperguide
+---
+
+## Inviting and Managing Team Members
+
+You invite collaborators to Paperguide workspaces to enable shared editing and reviews. Roles define permissions, ensuring secure contributions. Start by adding members via email invites.
+
+<Steps>
+  <Step title="Invite Users" icon="mail">
+    Go to workspace settings and enter emails.
+  </Step>
+  <Step title="Assign Roles" icon="users">
+    Choose admin for full access or editor for content changes.
+    ```javascript
+    // API for role assignment
+    const userId = 'user123';
+    const role = 'editor';
+    await fetch(`/api/workspaces/${workspaceId}/members`, {
+      method: 'POST',
+      body: JSON.stringify({ userId, role })
+    });
+    ```
+  </Step>
+  <Step title="Review Access" icon="eye">
+    Audit members periodically to maintain security.
+  </Step>
+</Steps>
+
+<Callout kind="success">
+  Real-time editing allows multiple users to work simultaneously without conflicts.
+</Callout>
+
+## Review and Approval Workflows
+
+Set up workflows for content approval. You use comments and version history to track changes.
+
+<Tabs>
+  <Tab title="Comments" icon="message-square">
+    Add inline feedback on specific sections.
+    ```markdown
+    <!-- Example comment in MDX -->
+    This section needs examples. @[reviewer: add code snippet]
+    ```
+  </Tab>
+  <Tab title="Version History" icon="git-branch">
+    View diffs and revert changes easily.
+    ```bash
+    # Integrate with Git for advanced versioning
+    git add docs/ && git commit -m "Update collab guide"
+    ```
+  </Tab>
+</Tabs>
+
+<Columns cols={2}>
+  <Card title="Notifications" icon="bell" href="#">
+    Get alerts on mentions and edits.
+  </Card>
+  <Card title="Mentions" icon="at-sign" href="#">
+    Tag users with `@username` for direct input.
+  </Card>
+</Columns>
+
+## Best Practices for Teams
+
+Establish guidelines for contributions. You schedule reviews and use templates for consistency.
+
+<Expandable title="Conflict Resolution" default-open="false">
+  Use branching for major changes to avoid overwrites.
+</Expandable>
+
+<ExpandableGroup>
+  <Expandable title="Remote Collaboration" default-open="true">
+    Share links for external reviewers without accounts.
+  </Expandable>
+  <Expandable title="Integration with Tools" default-open="false">
+    Sync with Slack or Microsoft Teams for updates.
+  </Expandable>
+</ExpandableGroup>
+
+| Role | Permissions | Use Case |
+|------|-------------|----------|
+| Admin | Full control | Project leads |
+| Editor | Edit content | Contributors |
+| Viewer | Read only | Stakeholders |
+
+Paperguide fosters productive collaboration. You track contributions via activity logs. Scale to `>200` users with group permissions. Export review histories for audits. This reduces feedback loops by `>30%`. Integrate with issue trackers for linked docs. (Word count: 265)

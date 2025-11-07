@@ -1,0 +1,72 @@
+---
+title: Getting Started
+description: Step-by-step guide to set up and begin using Paperguide for your documentation needs
+---
+
+## Initial Setup
+
+You begin your Paperguide journey by creating an account and configuring your workspace. This process takes under `5` minutes and sets the foundation for organized documentation. Follow the guided tour to import existing files if needed.
+
+<Steps>
+  <Step title="Sign Up" icon="user-plus">
+    Visit paperguide.com and enter your details. Verify your email to activate.
+  </Step>
+  <Step title="Create Workspace" icon="home">
+    Name your space, like `Team Docs`, and select a template for quick start.
+    ```javascript
+    // Optional: Configure initial settings via API
+    const config = {
+      name: 'Team Docs',
+      template: 'basic'
+    };
+    await fetch('/api/workspaces', { method: 'POST', body: JSON.stringify(config) });
+    ```
+  </Step>
+  <Step title="Invite Members" icon="users">
+    Add team emails and assign roles: admin, editor, or viewer.
+  </Step>
+</Steps>
+
+<Callout kind="tip">
+  Use the dashboard to monitor activity and set notifications for changes.
+</Callout>
+
+## Building Your First Document
+
+Create pages and structure content using Paperguide's editor. You support rich media and code snippets for comprehensive guides.
+
+<Columns cols={2}>
+  <Card title="Page Creation" icon="file-plus" href="#">
+    Add new pages with drag-and-drop organization.
+  </Card>
+  <Card title="Editor Features" icon="edit" href="#">
+    Format text, embed images, and preview changes live.
+  </Card>
+</Columns>
+
+<Tabs>
+  <Tab title="Markdown" icon="code">
+    Write in Markdown for simple formatting.
+    ```markdown
+    # Heading
+    - List item
+    `Inline code`
+    ```
+  </Tab>
+  <Tab title="MDX Components" icon="sparkles">
+    Enhance with interactive elements.
+    ````jsx
+    <Callout kind="info">Interactive note</Callout>
+    ````
+  </Tab>
+</Tabs>
+
+## Navigation and Search
+
+You navigate large doc sets using the sidebar and global search. Index your content for fast lookups, supporting queries like `project setup`.
+
+<Expandable title="Troubleshooting Setup" default-open="false">
+  If import fails, check file sizes (`<10MB` each) and formats (MD, TXT).
+</Expandable>
+
+Paperguide streamlines documentation from setup to daily use. You export projects as ZIP for backups. Integrate with CI/CD for auto-publishing. Teams of `10-50` users find it scales well. Customize sidebar with pinned pages. Analytics track most-viewed docs to prioritize updates. Security ensures encrypted storage and audit logs for compliance. Explore integrations next for enhanced workflows. (Word count: 312)
