@@ -1,185 +1,2170 @@
-openapi: '3.0.0'
+openapi: 3.0.0
 info:
-  version: 1.0.0
-  title: Paperguide API
-  license:
-    name: MIT
+    title: Videograph API
+    description: >-
+        This is a public workspace for Videograph APIs
+
+
+        ## Overview
+
+
+        This workspace is meant to do the work of defining and evolving collections
+        for documenting, mocking, testing, and integrating. All APIs and their
+        collections are all work in progress
+
+
+        ## Authentication & Authorization
+
+
+        All the apis are secured/protected and can be accessed only by using api
+        accesstoken and secret generated from dashboard for an organization's
+        environment.
+
+
+        An api access token's scope is limited to an organization's environment and
+        so with the APIs we can manage assets within the environment. In addition
+        api token can be granted only limited read/write access to product types
+        which provides authorization
+    version: 1.0.0
 servers:
-  - url: https://api.paperguide.com/v1
-paths:
-  /documents:
-    get:
-      summary: List all documents
-      operationId: listDocuments
-      parameters:
-        - name: limit
-          in: query
-          description: How many items to return at one time (max 100)
-          required: false
-          schema:
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: A paged array of documents
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Documents'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    post:
-      summary: Create a document
-      operationId: createDocuments
-      responses:
-        '201':
-          description: Document created successfully
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /documents/{docId}:
-    get:
-      summary: Info for a specific document
-      operationId: showDocumentById
-      parameters:
-        - name: docId
-          in: path
-          required: true
-          description: The id of the document to retrieve
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Expected response to a valid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Documents'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /projects:
-    get:
-      summary: List all projects
-      operationId: listProjects
-      parameters:
-        - name: limit
-          in: query
-          description: How many items to return at one time (max 50)
-          required: false
-          schema:
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: A paged array of projects
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Projects'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    post:
-      summary: Create a project
-      operationId: createProjects
-      responses:
-        '201':
-          description: Project created successfully
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /projects/{projectId}:
-    get:
-      summary: Info for a specific project
-      operationId: showProjectById
-      parameters:
-        - name: projectId
-          in: path
-          required: true
-          description: The id of the project to retrieve
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Expected response to a valid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Projects'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+    - url: https://api.videograph.ai
+      description: Production
 components:
-  schemas:
-    Document:
-      required:
-        - id
-        - name
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        tag:
-          type: string
-    Documents:
-      type: array
-      items:
-        $ref: '#/components/schemas/Document'
-    Project:
-      required:
-        - id
-        - name
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        description:
-          type: string
-    Projects:
-      type: array
-      items:
-        $ref: '#/components/schemas/Project'
-    Error:
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
+    securitySchemes:
+        basicAuth:
+            type: http
+            scheme: basic
+    schemas:
+        Video:
+            description: Video description
+            required:
+                - url
+            type: object
+            properties:
+                url:
+                    type: string
+                    description: Provide a source Video/content url.
+                start_offset:
+                    type: integer
+                    format: int64
+                    description: Mention clip start time in seconds from start of source video
+                end_offset:
+                    type: integer
+                    format: int64
+                    description: Mention clip end time in seconds from start of source video
+        Watermark:
+            description: Watermark description
+            required:
+                - url
+                - x_pos
+                - y_pos
+            type: object
+            properties:
+                url:
+                    type: string
+                    description: Provide source url of the image to be used as watermark.
+                x_pos:
+                    type: string
+                    description: X-axis position in pixels ex-10px
+                y_pos:
+                    type: string
+                    description: Y-axis position in pixels ex-10px
+                x_margin:
+                    type: string
+                    description: X-axis margin in pixel or percentage ex-10px/10%
+                y_margin:
+                    type: string
+                    description: Y-axis margin in pixel or percentage ex-10px/10%
+                x_align:
+                    type: string
+                    description: X-axis alignment, allowed values left/center/right
+                    enum:
+                        - left
+                        - center
+                        - right
+                y_align:
+                    type: string
+                    description: Y-axis alignment, allowed values top/middle/bottom
+                    enum:
+                        - top
+                        - middle
+                        - bottom
+                width:
+                    type: string
+                    description: Width of the image in pixel or percentage ex-10px/10%
+                height:
+                    type: string
+                    description: height of the image in pixel or percentage ex-10px/10%
+                opacity:
+                    type: string
+                    description: Control opacity of the watermark image, mentioned it in percentage ex-90%
+        Subtitle:
+            description: Subtitle description
+            required:
+                - url
+                - name
+                - language_code
+                - support_closed_captions
+            type: object
+            properties:
+                url:
+                    type: string
+                    description: Provide source url of Subtitle file. Supported formats include SRT & VTT.
+                name:
+                    type: string
+                    description: Name of subtitle ex-English US
+                language_code:
+                    type: string
+                    description: Mention Language code ex-en_US
+                support_closed_captions:
+                    type: boolean
+                    description: Does your subtitle support closed captions (CC), allowed values true/false
+        Metadata:
+            description: Metadata as key value pairs
+            required:
+                - key
+                - value
+            type: object
+            properties:
+                key:
+                    type: string
+                    description: The constant that defines the data set ex-color
+                value:
+                    type: string
+                    description: A variable whihc belongs to the data set ex-blue
+        CreateContent:
+            description: Create content description
+            type: object
+            required:
+                - title
+                - content
+                - playback_policy
+            properties:
+                title:
+                    type: string
+                    description: Provide a title for your content.
+                description:
+                    type: string
+                    description: Describe your content.
+                content:
+                    type: array
+                    description: Provide the source url to download the content. If you want to create video clips from the video then pass on the start time and end time of the clip along with source url.
+                    items:
+                        $ref: "#/components/schemas/Video"
+                watermark:
+                    type: array
+                    description: Watermark details on video content
+                    items:
+                        $ref: "#/components/schemas/Watermark"
+                subtitle:
+                    type: array
+                    description: Add Subtitles to video content
+                    items:
+                        $ref: "#/components/schemas/Subtitle"
+                tags:
+                    type: array
+                    description: Provide a list of tags that best describe your content.
+                    items:
+                        type: string
+                metadata:
+                    type: array
+                    description: Provide content metadata as key value pairs.
+                    items:
+                        $ref: "#/components/schemas/Metadata"
+                playback_policy:
+                    type: array
+                    description: Playback policies. Allowed are public, signed or both
+                    items:
+                        type: string
+                        enum:
+                            - public
+                            - signed
+                mp4_support:
+                    type: boolean
+                    description: Is MP4 generation supported
+                save_original_copy:
+                    type: boolean
+                    description: Is original copy to be saved
+                assetCollectionUUID:
+                    type: string
+                    description: Asset colleciton under which content should be created. Defaults to environment root collection.
+                encodingProfileUUID:
+                    type: string
+                    description: Enconding profile to be used to encode. Defaults to what is mapped to environment.
+        AdvCreateSettings:
+            description: Advance Create Setting
+            type: object
+            required:
+                - end
+                - start
+            properties:
+                start:
+                    type: integer
+                    format: int64
+                    description: Start position in secs
+                end: 
+                    type: integer
+                    format: int64
+                    description: End position in secs
+        AdvCreateVideoOverlayConfig:
+            description: Overlay config
+            type: object
+            required:
+                - h
+                - w
+                - x
+                - y
+            properties:
+                h:
+                    type: integer
+                    format: int64
+                    description: Height in px of overlay. Ex 50
+                w:
+                    type: integer
+                    format: int64
+                    description: Weight in px of overlay. Ex 50
+                x:
+                    type: integer
+                    format: int64
+                    description: X axis position from left top corner. Ex 10
+                y:
+                    type: integer
+                    format: int64
+                    description: Y axis position from left top corner. Ex 10
+        AdvCreateVideo:
+            description: Advance Video Content
+            type: object
+            required:
+                - settings
+                - src
+            properties:
+                layer: 
+                    type: integer
+                    format: int64
+                    description: Layer of the video
+                src:
+                    type: string
+                    description: Video source
+                settings:
+                    $ref: "#/components/schemas/AdvCreateSettings"
+        AdvCreateOverlayDetail:
+            description: Advance video overlay detail
+            type: object
+            properties:
+                layer: 
+                    type: integer
+                    format: int64
+                    description: Layer of the video
+                src:
+                    type: string
+                    description: Video source
+                settings:
+                    $ref: "#/components/schemas/AdvCreateSettings"
+                    description: Settings
+                config:
+                    $ref: "#/components/schemas/AdvCreateVideoOverlayConfig"
+                    description: Config
+                fontfile:
+                    type: string
+                    description: Font file
+                fontcolor:
+                    type: string
+                    description: Font Color
+                fontsize:
+                    type: integer
+                    format: int64
+                    description: Font size
+        AdvCreateOverlay:
+            description: Advance Video Overlay
+            type: object
+            properties:
+                text:
+                    type: array
+                    description: Overlay texts to display
+                    items:
+                        $ref: "#/components/schemas/AdvCreateOverlayDetail"
+                logo:
+                    type: array
+                    description: Overlay image or videos to display
+                    items:
+                        $ref: "#/components/schemas/AdvCreateOverlayDetail"
+        AdvVideoCreateContent:
+            description: Advance Video Create Content
+            type: object
+            required:
+                - title
+                - video
+                - playback_policy
+            properties:
+                title:
+                    type: string
+                    description: Provide a title for your content.
+                description:
+                    type: string
+                    description: Describe your content.
+                video:
+                    type: array
+                    description: Provide the source url to download the content. If you want to create video clips from the video then pass on the start time and end time of the clip along with source url.
+                    items:
+                        $ref: "#/components/schemas/AdvCreateVideo"
+                overlay:
+                    $ref: "#/components/schemas/AdvCreateOverlay"
+                    description: Watermark details on video content
+                tags:
+                    type: array
+                    description: Provide a list of tags that best describe your content.
+                    items:
+                        type: string
+                metadata:
+                    type: array
+                    description: Provide content metadata as key value pairs.
+                    items:
+                        $ref: "#/components/schemas/Metadata"
+                playback_policy:
+                    type: array
+                    description: Playback policies. Allowed are public, signed or both
+                    items:
+                        type: string
+                        enum:
+                            - public
+                            - signed
+                mp4_support:
+                    type: boolean
+                    description: Is MP4 generation supported
+        SocialClipContentSection:
+            description: Social Clip Content
+            type: object
+            required:
+                - url
+            properties:
+                url:
+                    type: string
+                    description: MP4 Video Source
+        SocialClipCreateContent:
+            description: Social Clip Video Create Content
+            type: object
+            required:
+                - title
+                - video
+                - playback_policy
+            properties:
+                title:
+                    type: string
+                    description: Provide a title for your content.
+                description:
+                    type: string
+                    description: Describe your content.
+                content:
+                    type: array
+                    description: Provide the source url to download the content. If you want to create video clips from the video then pass on the start time and end time of the clip along with source url.
+                    items:
+                        $ref: "#/components/schemas/SocialClipContentSection"
+                tags:
+                    type: array
+                    description: Provide a list of tags that best describe your content.
+                    items:
+                        type: string
+                metadata:
+                    type: array
+                    description: Provide content metadata as key value pairs.
+                    items:
+                        $ref: "#/components/schemas/Metadata"
+                playback_policy:
+                    type: array
+                    description: Playback policies. Allowed are public, signed or both
+                    items:
+                        type: string
+                        enum:
+                            - public
+                            - signed
+        UpdateContent:
+            type: object
+            required:
+                - title
+            properties:
+                title:
+                    type: string
+                    description: Provide content title.
+                description:
+                    type: string
+                    description: Provide content description.
+                tags:
+                    type: array
+                    items:
+                        type: string
+                    description: Provide Content tags.
+                metadata:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Metadata"
+                    description: Provide metadata key value pairs.
+                save_original_copy:
+                    type: boolean
+                    description: would u like to save the original copy?. Allowed values are true/false.
+        CreateContentClip:
+            type: object
+            required:
+                - title
+                - startTimeInSecs
+                - endTimeInSecs
+            properties:
+                title:
+                    type: string
+                    description: Clips title.
+                description:
+                    type: string
+                    description: Describe your content.
+                tags:
+                    type: array
+                    description: Provide a list of tags that best describe your clip.
+                    items:
+                        type: string
+                metadata:
+                    type: array
+                    description: Provide clip metadata as key value pairs.
+                    items:
+                        $ref: "#/components/schemas/Metadata"
+                startTimeInSecs:
+                    type: integer
+                    format: int64
+                    description: Mention clip start time in seconds from start of the video.
+                endTimeInSecs:
+                    type: integer
+                    format: int64
+                    description: Mention clip end time in seconds from start of the video.
+        CreateContentThumbnail:
+            type: object
+            required:
+                - videoPositionInSec
+                - width
+                - height
+            properties:
+                videoPositionInSec:
+                    type: integer
+                    format: int64
+                    description: Provide the exact duration of video in seconds at which you wish to create the thumbnail.
+                width:
+                    type: integer
+                    format: int64
+                    description: Specify the Width of thumbnail in pixels.
+                height:
+                    type: integer
+                    format: int64
+                    description: Specify the Height of thumbnail in pixels.
+        CreateDirectUploadContent:
+            description: Content description
+            type: object
+            required:
+                - title
+                - playback_policy
+            properties:
+                title:
+                    type: string
+                    description: Provide a title for your content.
+                description:
+                    type: string
+                    description: Describe your content.
+                watermark:
+                    type: array
+                    description: Add watermark image on video content
+                    items:
+                        $ref: "#/components/schemas/Watermark"
+                subtitle:
+                    type: array
+                    description: Add Subtitles to video content
+                    items:
+                        $ref: "#/components/schemas/Subtitle"
+                tags:
+                    type: array
+                    description: Content tags
+                    items:
+                        type: string
+                metadata:
+                    type: array
+                    description: Content metadata as key value pairs
+                    items:
+                        $ref: "#/components/schemas/Metadata"
+                playback_policy:
+                    type: array
+                    description: Playback policies. Allowed are public, signed or both
+                    items:
+                        type: string
+                        enum:
+                            - public
+                            - signed
+                mp4_support:
+                    type: boolean
+                    description: Is MP4 generation supported
+                save_original_copy:
+                    type: boolean
+                    description: Is original copy to be saved
+        CreateDirectUpload:
+            type: object
+            required:
+                - file_name
+            properties:
+                file_name:
+                    type: string
+                    description: Name of the file
+                timeout:
+                    type: integer
+                    format: int64
+                    description: Timeout of the file in seconds
+                cors_origin:
+                    type: string
+                    description: Cors origin ex - Allowed domain
+                content:
+                    $ref: "#/components/schemas/CreateDirectUploadContent"
+        CreateLiveStream:
+            type: object
+            required:
+                - title
+                - region
+                - record
+            properties:
+                title:
+                    type: string
+                    description: Provide a name for your livestream.
+                description:
+                    type: string
+                    description: Livestream description
+                region:
+                    type: string
+                    description: Region for creation ex - us-east-1
+                record:
+                    type: boolean
+                    description: Indicates if its liverecording (true) or streaming (false)
+                dvrDurationInMins:
+                    type: integer
+                    format: int64
+                    description: Indicates the dvr duration to be availbale during playback
+                tags:
+                    type: array
+                    description: Livestream tags
+                    items:
+                        type: string
+                metadata:
+                    type: array
+                    description: Livestream metadata as keyvalue pair
+                    items:
+                        $ref: "#/components/schemas/Metadata"
+                playback_policy:
+                    type: array
+                    description: Playback policies. Allowed are public, signed or both
+                    items:
+                        type: string
+                        enum:
+                            - public
+                            - signed
+                recordings_playback_policy:
+                    type: array
+                    description: Playback policies for generated recordings. Allowed are public, signed or both
+                    items:
+                        type: string
+                        enum:
+                            - public
+                            - signed
+        UpdateLiveStream:
+            type: object
+            required:
+                - title
+            properties:
+                title:
+                    type: string
+                    description: Livestream title/name
+                description:
+                    type: string
+                    description: Livestream description
+                tags:
+                    type: array
+                    description: Livestream tags
+                    items:
+                        type: string
+                dvrDurationInMins:
+                    type: integer
+                    format: int64
+                    description: Indicates the dvr duration to be availbale during playback
+                metadata:
+                    type: array
+                    description: Livestream metadata as keyvalue pair
+                    items:
+                        $ref: "#/components/schemas/Metadata"
+        CreateLiveStreamClip:
+            type: object
+            required:
+                - title
+                - startTime
+                - endTime
+            properties:
+                title:
+                    type: string
+                    description: Clips title.
+                description:
+                    type: string
+                    description: Describe your content.
+                tags:
+                    type: array
+                    description: Provide a list of tags that best describe your clip.
+                    items:
+                        type: string
+                metadata:
+                    type: array
+                    description: Provide clip metadata as key value pairs.
+                    items:
+                        $ref: "#/components/schemas/Metadata"
+                startTime:
+                    type: integer
+                    format: int64
+                    description: Clip start time in secs from epoc
+                endTime:
+                    type: integer
+                    format: int64
+                    description: Clip end time in secs from epoc
+        SigningKey:
+            required:
+                - productTypeId
+                - environmentUUID
+            type: object
+            properties:
+                productTypeId:
+                    type: integer
+                    format: int64
+                    enum:
+                        - 1
+                    description: Product type for which key is generated. 1 for Video/Live
+                environmentUUID:
+                    type: string
+                    description: Environment's identifier as UUID. Obtained from videograph dashboard
+tags:
+    - name: Videos
+      description:
+          Content and its assets (subtitles and thumbnails) management related apis
+          are grouped here
+    - name: Live Streams
+      description: CRUD on live streams, recordings and clips
+    - name: Video Direct Uploads
+      description: CRUD on content's direct uploades
+    - name: Video Clips
+      description: CRUD on content clips
+    - name: Video Subtitles
+      description: CRUD on content's subtitles are listed here
+    - name: Video Thumbnails
+      description: CRUD on content's thumbnail are listed here
+    - name: URL Signing Keys
+      description: CRUD on url signing keys
+
+paths:
+    /video/services/api/v1/contents/paginated:
+        get:
+            tags:
+                - Videos
+            summary: List Paginated Contents
+            description: >-
+                Lists all contents in the api token's organization environment in the
+                order of latest created with results paginated
+            security:
+                - basicAuth: []
+            parameters:
+                - name: includeAdditional
+                  in: query
+                  description: Use this to get metadata information also along with basic information
+                  required: false
+                  schema:
+                      type: boolean
+                - name: assetCollectionUUID
+                  in: query
+                  description: To fetch contents under specified asset collection
+                  required: false
+                  schema:
+                      type: string
+                - name: phrase
+                  in: query
+                  description: Search phrase
+                  required: false
+                  schema:
+                      type: string
+                - name: tag
+                  in: query
+                  description: Search only in tags
+                  required: false
+                  schema:
+                      type: string
+                - name: pageSize
+                  in: query
+                  description: Number of items to fetch
+                  required: true
+                  schema:
+                      type: number
+                - name: pageNum
+                  in: query
+                  description: Results from which page should be fetched.
+                  required: true
+                  schema:
+                      type: number
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                code: 200
+                                data:
+                                    total: 223
+                                    pageSize: 10
+                                    pageNum: 1
+                                    hasContents: true
+                                    contents:
+                                    - contentId: 80e05adf-3d5c-4f10-81b7-a9227587b9ca
+                                      created_at: 1653903574348
+                                      description: Video description
+                                      duration: 1800000
+                                      playbackPolicy:
+                                          - public
+                                          - signed
+                                      playbackUrl: >-
+                                          https://videographond.akamaized.net/enc/eac6be40-42de-40da-8c4a-6d9f2b8b9ba9/ba8693b0-20bb-4c62-8689-72528439ff45/yupptv/2228/master.m3u8
+                                      resolution: 1080P
+                                      status: Ready
+                                      statusId: 3
+                                      thumbnailUrl: >-
+                                          https://videographond.akamaized.net/thumb/enc/eac6be40-42de-40da-8c4a-6d9f2b8b9ba9/ba8693b0-20bb-4c62-8689-72528439ff45/yupptv/2228/mp4/image/0.jpg
+                                      title: Phani Test Review
+                                message: Fetched all paginated assets in the environment.
+                                status: Success
+    /video/services/api/v1/contents:
+        post:
+            tags:
+                - Videos
+            summary: Create Content
+            description: >-
+                **Use this endpoint to create a content (video/audio) from the asset url which is
+                publicly accessible**
+
+                *   Make sure you have created an API access token. You can create one by Signup/Signin into Videograph.
+
+                *   Add subtitles from different languages to your content.
+
+                *   Add and control watermarks/image overlays settings on your content.
+
+                *   For test purposes, 10 seconds duration of uploaded video will be transcoded for streaming
+
+                *   Add tags and meta-data to your content.
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateContent"
+                            example:
+                                title: Demo Video
+                                description: This is a demo video
+                                content:
+                                    - url: >-
+                                          https://example.com/sample-video.mp4
+                                watermark:
+                                    - url: >-
+                                          https://example.com/watermark-logo.png
+                                      x_pos: 1564px
+                                      y_pos: 74px
+                                      opacity: 70%
+                                subtitle:
+                                    - url: >-
+                                          https://example.com/subtitles.srt
+                                      name: English US
+                                      language_code: en_US
+                                      support_closed_captions: false
+                                tags:
+                                    - Animation
+                                    - Video demo
+                                metadata:
+                                    - key: color
+                                      value: blue
+                                playback_policy:
+                                    - public
+                                mp4_support: true
+                                save_original_copy: false
+                                test_video: true
+
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+            responses:
+                "201":
+                    description: Created
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Triggered processing of videos.
+                                code: 201
+                                data:
+                                    title: Video title
+                                    description: Video description
+                                    contentId: ""
+                                    tags:
+                                        - tag1
+                                        - tag2
+                                    metadata:
+                                        - key: abc
+                                          value: pqr
+                                    playback_policy:
+                                        - public
+                                        - signed
+                                    mp4_support: true
+                                    save_original_copy: true
+                                    statusId: 1
+                                    status: Processing
+                                    duration: 100
+                                    thumbnails: []
+                                    created_at: 1673347977713
+        get:
+            tags:
+                - Videos
+            summary: List Contents
+            description: >-
+                Lists all contents in the api token's organization environment in the
+                order of latest created
+            security:
+                - basicAuth: []
+            parameters:
+                - name: includeAdditional
+                  in: query
+                  description: Use this to get metadata information also along with basic information
+                  required: false
+                  schema:
+                      type: boolean
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                code: 200
+                                data:
+                                    - contentId: 80e05adf-3d5c-4f10-81b7-a9227587b9ca
+                                      created_at: 1653903574348
+                                      description: Video description
+                                      duration: 1800000
+                                      playbackPolicy:
+                                          - public
+                                          - signed
+                                      playbackUrl: >-
+                                          https://videographond.akamaized.net/enc/eac6be40-42de-40da-8c4a-6d9f2b8b9ba9/ba8693b0-20bb-4c62-8689-72528439ff45/yupptv/2228/master.m3u8
+                                      resolution: 1080P
+                                      status: Ready
+                                      statusId: 3
+                                      thumbnailUrl: >-
+                                          https://videographond.akamaized.net/thumb/enc/eac6be40-42de-40da-8c4a-6d9f2b8b9ba9/ba8693b0-20bb-4c62-8689-72528439ff45/yupptv/2228/mp4/image/0.jpg
+                                      title: Phani Test Review
+                                message: Fetched all video assets in the environment.
+                                status: Success
+    /video/services/api/v1/contents/adv:
+        post:
+            tags:
+                - Videos
+            summary: Advance Video Editing
+            description: >-
+                **Use this endpoint to create a content with watermarks and overlays**
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/AdvVideoCreateContent"
+                            example:
+                                title: Phani Adv
+                                description: Video description
+                                tags:
+                                - tag1
+                                - tag2
+                                metadata:
+                                -   key: abc
+                                    value: pqr
+                                playback_policy:
+                                - public
+                                - signed
+                                mp4_support: true
+                                overlay:
+                                    logo:
+                                    -   config:
+                                            h: 240
+                                            w: 120
+                                            x: 0
+                                            y: 0
+                                        layer: 1
+                                        settings:
+                                        end: 4
+                                        start: 0
+                                        src: https://videographond.akamaized.net/thumb/700x700/enc/yupptv/development/yupptv/3395/mp4/image/1.jpg
+                                    text:
+                                    -   config:
+                                            h: 80
+                                            w: 120
+                                            x: 0
+                                            y: 0
+                                        fontcolor: red
+                                        fontfile: Times New Roman
+                                        fontsize: 80
+                                        layer: 2
+                                        settings:
+                                            end: 3
+                                            start: 0
+                                        src: Hello adv
+                                video:
+                                    -   layer: 0
+                                        settings:
+                                            duration: 3
+                                            start: 0
+                                        src: https://example.com/sample-video.mp4
+                                    -   layer: 0
+                                        settings:
+                                            end: 6
+                                            start: 4
+                                        src: https://example.com/sample-video.mp4
+
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                code: 200
+                                message: Data success
+                                status: Success
+                                data:
+                                    contentId: 75615af3-2e97-4c8a-af98-92ab14df0965
+                                    created_at: 1676204780126
+                                    description: Video description
+                                    duration: 0
+                                    isAdvanced: true
+                                    metadata:
+                                        -   key: abc
+                                            value: pqr
+                                    mp4_support: true
+                                    playbackPolicy:
+                                        - public
+                                        - signed
+                                    save_original_copy: false
+                                    status: Pending
+                                    statusId: 1
+                                    tags:
+                                        - tag1
+                                        - tag2
+                                    test_video: false
+                                    title: Phani Adv
+    /video/services/api/v1/contents/portrait_pro:
+        post:
+            tags:
+                - Videos
+            summary: Portrait PRO
+            description: >-
+                **Use this endpoint to create a portrait pro video**
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SocialClipCreateContent"
+                            example:
+                                title: Portrait PRO Test
+                                description: Video description
+                                tags:
+                                - tag1
+                                - tag2
+                                metadata:
+                                -   key: abc
+                                    value: pqr
+                                playback_policy:
+                                - public
+                                - signed
+                                content:
+                                    -   url: https://example.com/sample-video.mp4
+
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                code: 200
+                                message: Data success
+                                status: Success
+                                data:
+                                    category: SocialClip
+                                    contentId: 702c325b-5c57-4162-924e-8accbef622b0
+                                    created_at: 1678796834550
+                                    description: ''
+                                    duration: 0
+                                    isAdvanced: false
+                                    isSocialClip: true
+                                    metadata: []
+                                    playbackPolicy:
+                                        - public
+                                    status: Pending
+                                    statusId: 1
+                                    test_video: false
+                                    title: Portrait PRO Test
+    /video/services/api/v1/contents/{CONTENT_ID}:
+        put:
+            tags:
+                - Videos
+            summary: Update Content
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/UpdateContent"
+            security:
+                - basicAuth: []
+            parameters:
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Provide the Content ID as available in Videograph dashboard.
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Updated video details
+                                code: 200
+                                data:
+                                    title: Video title
+                                    description: Video description
+                                    contentId: ""
+                                    tags:
+                                        - tag1
+                                        - tag2
+                                    metadata:
+                                        - key: abc
+                                          value: pqr
+                                    playback_policy:
+                                        - public
+                                        - signed
+                                    mp4_support: true
+                                    save_original_copy: true
+                                    statusId: 1
+                                    status: Processing
+                                    duration: 100
+                                    thumbnails: []
+                                    created_at: 0
+        get:
+            tags:
+                - Videos
+            summary: Get Content Details
+            security:
+                - basicAuth: []
+            parameters:
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Content UUID
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Updated video details
+                                code: 200
+                                data:
+                                    title: Video title
+                                    description: Video description
+                                    contentId: ""
+                                    tags:
+                                        - tag1
+                                        - tag2
+                                    metadata:
+                                        - key: abc
+                                          value: pqr
+                                    playback_policy:
+                                        - public
+                                        - signed
+                                    mp4_support: true
+                                    save_original_copy: true
+                                    statusId: 1
+                                    status: Processing
+                                    duration: 100
+                                    thumbnails: []
+                                    created_at: 0
+        delete:
+            tags:
+                - Videos
+            summary: Delete Content
+            security:
+                - basicAuth: []
+            parameters:
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Content UUID
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Deleted video
+                                code: 200
+    /ext/services/api/v1/contents/{CONTENT_ID}:
+        get:
+            tags:
+                - Videos
+            summary: Get Detailed Content Information
+            security:
+                - basicAuth: []
+            parameters:
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Content UUID
+                - name: include
+                  in: query
+                  schema:
+                      type: string
+                  required: false
+                  examples:
+                        thumbnails:
+                            summary: Only Thumbnails
+                            value:
+                                include: thumbnails
+                        subtitles:
+                            summary: Only Subtitles
+                            value:
+                                include: subtitles
+                        thumbnails_subtitles:
+                            summary: Both Thumbnails & Subtitles
+                            value:
+                                include: thumbnails,subtitles
+                  description: Content UUID
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Content details
+                                code: 200
+                                data:
+                                    title: Video title
+                                    description: Video description
+                                    contentId: ""
+                                    tags:
+                                        - tag1
+                                        - tag2
+                                    metadata:
+                                        - key: abc
+                                          value: pqr
+                                    playback_policy:
+                                        - public
+                                        - signed
+                                    mp4_support: true
+                                    save_original_copy: true
+                                    statusId: 1
+                                    status: Processing
+                                    duration: 100
+                                    parentContent: {
+                                        uuid: "parent_content_uuid",
+                                        title: "parent content title",
+                                        thumbnail_url: "parent thumbnail url",
+                                        category: "RegularVOD",
+                                        status_id: 3
+                                    }
+                                    thumbnails: [
+                                        {
+                                            uuid: "uuid of thumbnail",
+                                            width: null,
+                                            height: null,
+                                            created_on: 0,
+                                            image_url: "url"
+                                        }
+                                    ]
+                                    subtitles: [
+                                        {
+                                            uuid: "uuid of subtitle",
+                                            name: "subtitle name",
+                                            language_code: "en",
+                                            created_on: 0,
+                                            url: "url"
+                                        }
+                                    ]
+                                    created_at: 0
+    /ext/services/api/v1/contents/{CONTENT_ID}/events:
+        get:
+            tags:
+                - Videos
+            summary: Get Content Events
+            security:
+                - basicAuth: []
+            parameters:
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Content UUID
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Content uuid events
+                                code: 200
+                                data:
+                                    [
+                                        {
+                                            "uuid": "d3db9270-bcc6-4b08-a375-efe14cccce6c",
+                                            "messageType": "content.ready",
+                                            "occurredOn": "0"
+                                        },
+                                        {
+                                            "uuid": "6cd35143-8eca-42ab-bb92-ec6d35a1ffbf",
+                                            "messageType": "content.created",
+                                            "occurredOn": "0"
+                                        }
+                                    ]
+    /video/services/api/v1/livestreams:
+        post:
+            tags:
+                - Live Streams
+            summary: Create Livestream/Recording
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateLiveStream"
+            security:
+                - basicAuth: []
+            responses:
+                "200":
+                    description: Successful response
+                    content:
+                        application/json: {}
+        get:
+            tags:
+                - Live Streams
+            summary: List Livestreams
+            security:
+                - basicAuth: []
+            parameters:
+                - name: record
+                  in: query
+                  description: true for liverecordings and false for livestreams
+                  required: true
+                  schema:
+                      type: boolean
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                code: 200
+                                data:
+                                    - created_at: 1672715707376
+                                      status: Initializing
+                                      statusId: 1
+                                      streamUUID: b7ce0bf9-c139-40f4-9306-753a534912c6
+                                    - created_at: 1667282138558
+                                      status: Idle
+                                      statusId: 3
+                                      streamUUID: cb570748-c6c8-4f5b-8b69-330f6af0bb37
+                                message: "List live streams by record: true"
+                                status: Success
+    /video/services/api/v1/livestreams/{STREAM_ID}:
+        get:
+            tags:
+                - Live Streams
+            summary: Get Livestream
+            security:
+                - basicAuth: []
+            parameters:
+                - name: STREAM_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                code: 200
+                                data:
+                                    createdOn: 1672715707376
+                                    metadata:
+                                        - key: AdditionalExternalId
+                                          value: "503962"
+                                    playbackUrl: >-
+                                        http://example.videograph.ai/vglive/503962/playlist_dvr.m3u8
+                                    rtmpUrl: rtmp://example-ingest.videograph.ai/rec/STREAM_KEY
+                                    rtmpsUrl: ""
+                                    status: Idle
+                                    streamKey: "503962"
+                                    streamUUID: b7ce0bf9-c139-40f4-9306-753a534912c6
+                                    title: First Channel
+                                message: >-
+                                    Livestream details with id:
+                                    b7ce0bf9-c139-40f4-9306-753a534912c6
+                                status: Success
+        put:
+            tags:
+                - Live Streams
+            summary: Update Livestream
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/UpdateLiveStream"
+            security:
+                - basicAuth: []
+            parameters:
+                - name: STREAM_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+            responses:
+                "200":
+                    description: Successful response
+                    content:
+                        application/json: {}
+        delete:
+            tags:
+                - Live Streams
+            summary: Delete Livestream
+            security:
+                - basicAuth: []
+            parameters:
+                - name: STREAM_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                code: 200
+                                data:
+                                    createdOn: 1672715707376
+                                    metadata:
+                                        - key: AdditionalExternalId
+                                          value: "503962"
+                                    playbackUrl: >-
+                                        http://example.videograph.ai/vglive/503962/playlist_dvr.m3u8
+                                    rtmpUrl: rtmp://example-ingest.videograph.ai/rec/STREAM_KEY
+                                    rtmpsUrl: ""
+                                    status: Deleting
+                                    streamKey: "503962"
+                                    streamUUID: b7ce0bf9-c139-40f4-9306-753a534912c6
+                                    title: First Channel
+                                message: Updated livestream b7ce0bf9-c139-40f4-9306-753a534912c6
+                                status: Success
+    /video/services/api/v1/livestreams/{STREAM_ID}/clips:
+        post:
+            tags:
+                - Live Streams
+            summary: Create Clip from Recording
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateLiveStreamClip"
+            security:
+                - basicAuth: []
+            parameters:
+                - name: STREAM_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+            responses:
+                "200":
+                    description: Successful response
+                    content:
+                        application/json: {}
+        get:
+            tags:
+                - Live Streams
+            summary: List Livestream Clips
+            security:
+                - basicAuth: []
+            parameters:
+                - name: STREAM_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+            responses:
+                "200":
+                    description: Successful response
+                    content:
+                        application/json: {}
+    /video/services/api/v1/uploads:
+        post:
+            tags:
+                - Video Direct Uploads
+            summary: Create direct Upload
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateDirectUpload"
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Content-Type
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+            responses:
+                "201":
+                    description: Created
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                id: zd01Pe2bNpYhxbrwYABgFE01twZdtv4M00kts2i02GhbGjc
+                                url: >-
+                                    https://example-bucket.s3.region.amazonaws.com/path/to/file.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220310T110243Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=EXAMPLE_ACCESS_KEY_ID%2F20220310%2Fregion%2Fs3%2Faws4_request&X-Amz-Signature=EXAMPLE_SIGNATURE
+                                cors_origin: https://example.com/
+                                timeout: 3600
+                                status: Waiting
+        get:
+            tags:
+                - Video Direct Uploads
+            summary: List All direct uploads
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                - id: zd01Pe2bNpYhxbrwYABgFE01twZdtv4M00kts2i02GhbGjc
+                                  url: >-
+                                      https://example-bucket.s3.region.amazonaws.com/path/to/file1.json
+                                  cors_origin: https://example.com/
+                                  timeout: 3600
+                                  status: Waiting
+                                - id: zd01Pe2bNpYhxbrwYABgFE01twZdtv4M00kts2i02GhbGjc
+                                  url: >-
+                                      https://example-bucket.s3.region.amazonaws.com/path/to/file2.json
+                                  cors_origin: https://example.com/
+                                  timeout: 3600
+                                  status: Ready
+                                  assetId: assetuuid
+    /video/services/api/v1/uploads/{UPLOAD_ID}:
+        get:
+            tags:
+                - Video Direct Uploads
+            summary: Get Direct upload
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+                - name: UPLOAD_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                id: zd01Pe2bNpYhxbrwYABgFE01twZdtv4M00kts2i02GhbGjc
+                                url: >-
+                                    https://example-bucket.s3.region.amazonaws.com/path/to/file.json
+                                cors_origin: https://example.com/
+                                timeout: 3600
+                                status: Waiting
+        delete:
+            tags:
+                - Video Direct Uploads
+            summary: Delete/Cancel Upload
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+                - name: UPLOAD_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                id: zd01Pe2bNpYhxbrwYABgFE01twZdtv4M00kts2i02GhbGjc
+                                url: >-
+                                    https://example-bucket.s3.region.amazonaws.com/path/to/file.json
+                                cors_origin: https://example.com/
+                                timeout: 3600
+                                status: Cancelled
+    /video/services/api/v1/contents/{CONTENT_ID}/clips:
+        post:
+            tags:
+                - Video Clips
+            summary: Create Content clip
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateContentClip"
+            security:
+                - basicAuth: []
+            parameters:
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Provide the Content ID as available in Videograph dashboard.
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Updated video details
+                                code: 200
+                                data:
+                                    title: Video title
+                                    description: Video description
+                                    contentId: ""
+                                    tags:
+                                        - tag1
+                                        - tag2
+                                    metadata:
+                                        - key: abc
+                                          value: pqr
+                                    playback_policy:
+                                        - public
+                                        - signed
+                                    mp4_support: true
+                                    save_original_copy: true
+                                    statusId: 1
+                                    status: Processing
+                                    duration: 100
+                                    thumbnails: []
+                                    created_at: 0
+        get:
+            tags:
+                - Video Clips
+            summary: List a content clips
+            security:
+                - basicAuth: []
+            parameters:
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Content UUID
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Updated video details
+                                code: 200
+                                data:
+                                    - uuid: "clip uuid"
+                                      name: "clip name"
+                                      createdOn: 0
+                                    - uuid: "clip uuid"
+                                      name: "clip name"
+                                      createdOn: 0
+    /video/services/api/v1/contents/{CONTENT_ID}/subtitles:
+        post:
+            tags:
+                - Video Subtitles
+            summary: Create Content Subtitle
+            description: >-
+                Associates the provided subtitle for the content with the mentioned
+                `language_code`
+
+
+                If a new subtitle is uploaded with the same `language_code`, existing
+                one is replaced with the new one
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Subtitle"
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Content UUID
+            responses:
+                "201":
+                    description: Created
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Updated video details
+                                code: 200
+                                data:
+                                    url: >-
+                                        https://example.cloudfront.net/path/to/subtitle.scc
+                                    name: English US
+                                    language_code: en_US
+                                    support_closed_captions: false
+                                    uuid: subtitleid
+        get:
+            tags:
+                - Video Subtitles
+            summary: List Content subtitles
+            description: Lists all subtitles associated with a content
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Content UUID
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Updated video details
+                                code: 200
+                                data:
+                                    - url: >-
+                                          https://example.cloudfront.net/path/to/subtitle.scc
+                                      name: English US
+                                      language_code: en_US
+                                      support_closed_captions: false
+                                      uuid: subtitleid
+    /video/services/api/v1/contents/{CONTENT_ID}/subtitles/{SUBTITLE_ID}:
+        get:
+            tags:
+                - Video Subtitles
+            summary: Get Content Subtitle Details
+            description: >-
+                Details of the subtitle associated with the content can be retrieved
+                using subtitle uuid
+            security:
+                - basicAuth: []
+            parameters:
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Content UUID
+                - name: SUBTITLE_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Subtitle UUID
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Updated video details
+                                code: 200
+                                data:
+                                    url: >-
+                                        https://example.cloudfront.net/path/to/subtitle.scc
+                                    name: English US
+                                    language_code: en_US
+                                    support_closed_captions: false
+                                    uuid: subtitleid
+        delete:
+            tags:
+                - Video Subtitles
+            summary: Delete Content Subtitle
+            description: >-
+                Content subtitle can be disassociated or removed from a content using
+                subtitle's uuid
+            security:
+                - basicAuth: []
+            parameters:
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Content UUID
+                - name: SUBTITLE_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Subtitle UUID
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Updated video details
+                                code: 200
+    /video/services/api/v1/contents/{CONTENT_ID}/thumbnails:
+        post:
+            tags:
+                - Video Thumbnails
+            summary: Create and set default thumbnail
+            description: >-
+                This is is to create a thumbnail of specified dimensions with the frame
+                of video at the given position in sec. Generated thumbnail gets assigned
+                as default thumbnail immediately to the content
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateContentThumbnail"
+            security:
+                - basicAuth: []
+            parameters:
+                - name: CONTENT_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Content UUID
+            responses:
+                "201":
+                    description: Created
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Thumbnail created
+                                code: 201
+    /video/services/api/v1/signing-keys:
+        post:
+            tags:
+                - URL Signing Keys
+            summary: Create Signing Key
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SigningKey"
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+                - name: Content-Type
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+            responses:
+                "201":
+                    description: Created
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Generated signing key for environment.
+                                code: 201
+                                data:
+                                    uuid: 1
+                                    signingKeyId: vxdYecwma5FhGVVT4pyALK9gq4XbPOS9v02Vfp6ZnAj00
+                                    privateKey: <REDACTED - RSA PRIVATE KEY>
+                                    createdOn: 1644333573405
+        get:
+            tags:
+                - URL Signing Keys
+            summary: List Signing Keys
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Lists all signing keys for environment and prooduct.
+                                code: 200
+                                data:
+                                    - id: 1
+                                      productTypeId: 1
+                                      environmentId: 1
+                                      signingKeyId: vxdYecwma5FhGVVT4pyALK9gq4XbPOS9v02Vfp6ZnAj00
+                                      createdOn: 1644333573405
+                                      createdBy: user@example.com
+                                    - id: 2
+                                      productTypeId: 2
+                                      environmentId: 1
+                                      signingKeyId: 4Riv83rZ4EYc3XeMGQt01ME3Z6MOtXAGX6Gy5F9lyFAU
+                                      createdOn: 1644333573405
+                                      createdBy: user@example.com
+    /video/services/api/v1/signing-keys/{SIGNING_KEY_ID}:
+        get:
+            tags:
+                - URL Signing Keys
+            summary: Get Signing Key Details
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+                - name: SIGNING_KEY_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Signing Key UUID
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Lists all signing keys for environment and prooduct.
+                                code: 200
+                                data:
+                                    - id: 1
+                                      productTypeId: 1
+                                      environmentId: 1
+                                      signingKeyId: vxdYecwma5FhGVVT4pyALK9gq4XbPOS9v02Vfp6ZnAj00
+                                      createdOn: 1644333573405
+                                      createdBy: user@example.com
+                                    - id: 2
+                                      productTypeId: 2
+                                      environmentId: 1
+                                      signingKeyId: 4Riv83rZ4EYc3XeMGQt01ME3Z6MOtXAGX6Gy5F9lyFAU
+                                      createdOn: 1644333573405
+                                      createdBy: user@example.com
+        delete:
+            tags:
+                - URL Signing Keys
+            summary: Delete Signing Key
+            security:
+                - basicAuth: []
+            parameters:
+                - name: Accept
+                  in: header
+                  schema:
+                      type: string
+                  example: application/json
+                - name: SIGNING_KEY_ID
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+                  description: Signing Key UUID
+            responses:
+                "200":
+                    description: OK
+                    headers:
+                        Content-Type:
+                            schema:
+                                type: string
+                                example: application/json
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                            example:
+                                status: Success
+                                message: Deleted signing key successfully.
+                                code: 200
