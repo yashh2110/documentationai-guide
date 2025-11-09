@@ -1,25 +1,28 @@
 ---
 title: Organization
-description: Best practices for structuring and managing documentation in Paperguide workspaces
+description: >-
+  Best practices for structuring and managing documentation in Paperguide
+  workspaces
 ---
-
 ## Structuring Your Workspace
 
-You organize documentation effectively by using folders, tags, and hierarchies in Paperguide. This keeps content accessible and maintainable as projects grow. Start with a clear outline to avoid clutter.
+You organize documentation effectively by using folders, tags, and hierarchies in Paperguide. This keeps content accessible and maintainable as projects grow. Start with a clear outline to avoid clutter
 
-<Columns cols={3}>
-  <Card title="Folders" icon="folder" href="#">
+<Columns uid="aba5b69a-64a4-4e3d-88e2-876acb0393ac" cols="3">
+  <Card title="Folders" href="#" icon="folder" horizontal="false">
     Group related pages into nested folders.
   </Card>
-  <Card title="Tags" icon="tag" href="#">
+
+  <Card title="Tags" href="#" icon="tag" horizontal="false">
     Label pages for quick filtering and search.
   </Card>
-  <Card title="Templates" icon="file-text" href="#">
+
+  <Card title="Templates" href="#" icon="file-text" horizontal="false">
     Reuse structures for consistent documentation.
   </Card>
 </Columns>
 
-<Callout kind="alert">
+<Callout uid="52e526a7-603d-4c84-8ebe-ec3713f5410b" kind="alert" collapsed="false">
   Limit folder depth to `<=3` levels to prevent navigation issues.
 </Callout>
 
@@ -27,9 +30,10 @@ You organize documentation effectively by using folders, tags, and hierarchies i
 
 Apply tags like `api`, `tutorial` to pages. You search by multiple tags for precise results.
 
-<Tabs>
+<Tabs uid="218b8706-3adb-4d31-904d-206530c90052">
   <Tab title="Adding Tags" icon="plus">
     In the editor, select pages and assign from the tag panel.
+
     ```javascript
     // API example for bulk tagging
     const pages = ['doc1', 'doc2'];
@@ -40,8 +44,10 @@ Apply tags like `api`, `tutorial` to pages. You search by multiple tags for prec
     });
     ```
   </Tab>
+
   <Tab title="Searching" icon="search">
     Use the search bar: `tag:api status:draft`.
+
     ```bash
     # CLI integration example
     paperguide search --tags api --limit 20
@@ -49,14 +55,16 @@ Apply tags like `api`, `tutorial` to pages. You search by multiple tags for prec
   </Tab>
 </Tabs>
 
-<Steps>
-  <Step title="Create Outline" icon="list">
+<Steps uid="85a2d41a-0d0e-4042-8903-7dbf7e8ef85e">
+  <Step title="Create Outline" icon="list" title-type="p">
     Map your doc structure on paper or in a mind map tool.
   </Step>
-  <Step title="Implement Folders" icon="folder-plus">
+
+  <Step title="Implement Folders" icon="folder-plus" title-type="p">
     Drag pages into folders via the sidebar.
   </Step>
-  <Step title="Review Structure" icon="check">
+
+  <Step title="Review Structure" icon="check" title-type="p">
     Ensure logical flow from general to specific topics.
   </Step>
 </Steps>
@@ -65,19 +73,20 @@ Apply tags like `api`, `tutorial` to pages. You search by multiple tags for prec
 
 Regularly audit your organization to keep it efficient. You archive outdated pages and update links.
 
-<ExpandableGroup>
+<ExpandableGroup uid="c3104c8d-3f0d-45bf-b8a2-b7e6501f6164">
   <Expandable title="Handling Large Projects" default-open="true">
     Split into multiple workspaces if exceeding `>500` pages.
   </Expandable>
+
   <Expandable title="Migration Tips" default-open="false">
     Export from old tools and import via CSV for metadata.
   </Expandable>
 </ExpandableGroup>
 
-| Feature | Benefit | Limit |
-|---------|---------|-------|
-| Folders | Logical grouping | `<=10` per level |
-| Tags | Flexible search | `<=20` per page |
-| Search | Fast retrieval | Supports `>=1000` results |
+| Feature | Benefit          | Limit                     |
+| ------- | ---------------- | ------------------------- |
+| Folders | Logical grouping | `<=10` per level          |
+| Tags    | Flexible search  | `<=20` per page           |
+| Search  | Fast retrieval   | Supports `>=1000` results |
 
 Paperguide's tools make organization intuitive. You collaborate by sharing folder views. Analytics highlight unused sections for cleanup. Integrate with external storage for backups. Scale to enterprise with custom fields. Permissions control edits per folder. This approach reduces search time by `>40%`. (Word count: 278)
